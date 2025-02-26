@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shrimple Music</title>
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Add cache prevention meta tags -->
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="hero-section">
+        <h1>Shrimple Music</h1>
+        <div class="search-box">
+            <input type="text" id="heroSearchInput" placeholder="Search for songs, artists..." autocomplete="off">
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="content-wrapper">
+            <div class="main-content">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search for songs, artists..." autocomplete="off">
+                </div>
+                <div id="searchResults" class="search-results"></div>
+            </div>
+            <div class="side-panel">
+                <div class="github-container">
+                    <a href="https://github.com/lhmchyd/Shrimple-Music" target="_blank" rel="noopener" class="github-button">
+                        <i class="fab fa-github"></i>
+                        <span>Repository</span>
+                    </a>
+                </div>
+                <div class="queue-panel">
+                    <div class="now-playing-section">
+                        <h2>Now Playing</h2>
+                        <div id="nowPlayingQueue" class="queue-item current">
+                            <!-- Will be populated by JS -->
+                        </div>
+                    </div>
+                    <div class="next-up-section">
+                        <div class="section-header">
+                            <h2>Next Up</h2>
+                            <!-- Remove the toggle button -->
+                        </div>
+                        <div id="queueList" class="queue-list">
+                            <!-- Will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Desktop Player -->
+        <div class="player-controls desktop-player">
+            <div class="now-playing">
+                <div class="thumbnail-container">
+                    <img id="currentThumbnail" src="" alt="">
+                </div>
+                <div class="song-info">
+                    <div id="nowPlayingTitle" class="song-title"></div>
+                    <div id="nowPlayingArtist" class="song-artist"></div>
+                </div>
+            </div>
+            <div class="controls">
+                <div class="control-buttons">
+                    <button id="shuffleBtn">
+                        <span class="material-icons">shuffle</span>
+                    </button>
+                    <button id="prevBtn">
+                        <span class="material-icons">skip_previous</span>
+                    </button>
+                    <button id="playPauseBtn">
+                        <span class="material-icons">play_arrow</span>
+                    </button>
+                    <button id="nextBtn">
+                        <span class="material-icons">skip_next</span>
+                    </button>
+                    <button id="repeatBtn">
+                        <span class="material-icons">repeat</span>
+                    </button>
+                </div>
+                <div class="progress-container">
+                    <span id="currentTime">0:00</span>
+                    <input type="range" id="progressBar" min="0" max="100" value="0">
+                    <span id="duration">0:00</span>
+                </div>
+            </div>
+            <div class="right-controls">
+                <div class="volume-control">
+                    <span class="material-icons" id="volumeIcon">volume_up</span>
+                    <input type="range" id="volumeBar" min="0" max="100" value="100">
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Player -->
+        <div class="player-controls mobile-player minimized" onclick="expandPlayer()">
+            <div class="expanded-controls" style="display: none;">
+                <button class="close-button" onclick="minimizePlayer()">
+                    <span class="material-icons">keyboard_arrow_down</span>
+                </button>
+                <div class="progress-container">
+                    <span id="mobileCurrent">0:00</span>
+                    <input type="range" id="mobileProgress" min="0" max="100" value="0">
+                    <span id="mobileDuration">0:00</span>
+                </div>
+                <div class="control-buttons">
+                    <button id="mobileShuffleBtn">
+                        <span class="material-icons">shuffle</span>
+                    </button>
+                    <button id="mobilePrevBtn">
+                        <span class="material-icons">skip_previous</span>
+                    </button>
+                    <button id="mobilePlayPauseBtn">
+                        <span class="material-icons">play_arrow</span>
+                    </button>
+                    <button id="mobileNextBtn">
+                        <span class="material-icons">skip_next</span>
+                    </button>
+                    <button id="mobileRepeatBtn">
+                        <span class="material-icons">repeat</span>
+                    </button>
+                </div>
+            </div>
+            <div class="now-playing">
+                <div class="thumbnail-container">
+                    <img id="mobileThumbnail" src="" alt="">
+                </div>
+                <div class="song-info">
+                    <div id="mobileTitle" class="song-title"></div>
+                    <div id="mobileArtist" class="song-artist"></div>
+                </div>
+            </div>
+            <div class="mobile-controls" onclick="event.stopPropagation()">
+                <button class="mini-play-button" onclick="togglePlay(event)">
+                    <span class="material-icons">play_arrow</span>
+                </button>
+                <button class="queue-toggle-button" onclick="toggleMobileQueue(event)">
+                    <span class="material-icons">queue_music</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Mobile Queue Panel -->
+    <div class="mobile-queue-panel">
+        <div class="mobile-queue-header">
+            <h2>Queue</h2>
+            <button class="close-queue-button" onclick="toggleMobileQueue(event)">
+                <span class="material-icons">close</span>
+            </button>
+        </div>
+        <div class="mobile-queue-content">
+            <div class="mobile-now-playing-section">
+                <h3>Now Playing</h3>
+                <div id="mobileNowPlayingQueue" class="queue-item current">
+                    <!-- Will be populated by JS -->
+                </div>
+            </div>
+            <div class="mobile-next-up-section">
+                <h3>Next Up</h3>
+                <div id="mobileQueueList" class="queue-list">
+                    <!-- Will be populated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Update player div with specific ID and keep it visible for debugging -->
+    <div id="player" style="position: fixed; bottom: -9999px;"></div>
+    
+    <script src="db.js" type="module"></script>
+    <script src="index.js" type="module"></script>
+</body>
+</html>
