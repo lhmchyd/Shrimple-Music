@@ -1,6 +1,6 @@
 # 🎵 Shrimple Music
 
-[![License](https://img.shields.io/github/license/lhmchyd/Shrimple-Music?style=for-the-badge)](LICENSE)
+[![License](https://img.shields.io/github/license/lhmchyd/Shrimple-Music?style=for-the-badge)](./LICENSE)
 [![Stars](https://img.shields.io/github/stars/lhmchyd/Shrimple-Music?style=for-the-badge)](https://github.com/lhmchyd/Shrimple-Music/stargazers)
 [![Forks](https://img.shields.io/github/forks/lhmchyd/Shrimple-Music?style=for-the-badge)](https://github.com/lhmchyd/Shrimple-Music/network/members)
 [![Issues](https://img.shields.io/github/issues/lhmchyd/Shrimple-Music?style=for-the-badge)](https://github.com/lhmchyd/Shrimple-Music/issues)
@@ -13,9 +13,9 @@ Shrimple Music is a **lightweight**, **minimalist**, and **responsive** music pl
 
 ## 📸 Screenshots
 
-| 🎵 Player View | 📂 Playlist View |
+| 🎵 Desktop | 📂 Mobile |
 |--------------|----------------|
-| ![Player](https://via.placeholder.com/400x250.png?text=Music+Player) | ![Playlist](https://via.placeholder.com/400x250.png?text=Playlist) |
+| ![Dekstop](https://media-hosting.imagekit.io//6f468652e4ea46a9/dekstop.jpg?Expires=1835200214&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=HsxEJe-C8l-nQqBZxHcjgCjhjRZJNDLThAL33gTep9OkKAqXe2tfTC4lkg9UDqGR5hR3yToMULkdThkKONb36ZqftL6u1Kb-vY3cP-srX4XtsBJDaXZpVQLmCw2AjJxuouS9xrNuOcxvWCXkpnuIslM69A0bzrl2JRqi3veYFia4itHRP82VwKA3u6dRNvKbbHmeinqTOAHym72SAK81Wz9JmXYd4CZsoFGPghJ6nOoaiEwd8uldT2hBS2wqQP98FkamClhdGd3HO3YjDOLeidTEUUCUS7o5Z3IOPSW5M6aLNRr8Lh2zM0X8f1RW-zzI8ZpoWfhjb83omGrLlcg8GA__) | ![Mobile](https://media-hosting.imagekit.io//48e3da2197a04959/mobile.jpg?Expires=1835200285&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=qgYb~SJECZv4m9V0pjmb4mJy~iQcuUkYpbclC8jx-22bs2uDCe0mX7qPcmoM84w5QXl-9SKh5UqMwF9-0bfeEDHsZtsHABlJzEvfPtkXUVWhXKtKlM38mS7MnDxql5li7ZKsr0qhMyzOMCkYFIL1bHZE8hOYjzDtcAqL7P6Is4L8NPhkzi1I8LGMuCNoDpGemZ72kugBg84CB3-zBmIkLd~i67Q6Bkr~M4r2SFtVfPJWpDKZ1N-Kq5BmVbWSHmMLuvkE2R0Elk6hKi4MxxzX6BrFs1NZV7ekLDQr20AR8DrbGqd4pZ2L22-VpXNBMdLfL1hEiiuttosnwmpmSJ-ecg__) |
 
 ---
 
