@@ -7,7 +7,8 @@
 Shrimple Music is a **lightweight**, **minimalist**, and **responsive** music player built for seamless playback on **desktop and mobile** devices. It allows users to **search, queue, and play** their favorite tracks in a simple yet powerful interface.
 
 📌 **Live Demo:** [Shrimple Music](https://shrimple-music.netlify.app)
-🤖 **AI:** Using both Copilot and OpenAI to make this my first project.
+
+🤖 **Disclaimer:** Using both Copilot and OpenAI to make this my first project.
 
 ---
 
