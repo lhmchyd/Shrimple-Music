@@ -29,7 +29,7 @@ Shrimple Music is a **lightweight**, **minimalist**, and **responsive** music pl
 
 ## 🚀 Features
 
-✅ **Cross-Platform Compatibility** – Works on desktop & mobile.
+✅ **Cross-Platform Compatibility** – Works on desktop & mobile.   
 ✅ **Local Storage** – Saving Favorite music using IndexedDB.    
 ✅ **Minimalist UI** – Distraction-free and easy-to-use interface.  
 ✅ **Responsive Layout** – Adapts to different screen sizes.  
