@@ -1,6 +1,5 @@
 # 🎵 Shrimple Music
 
-[![License](https://img.shields.io/github/license/lhmchyd/Shrimple-Music?style=for-the-badge)](./LICENSE)
 [![Stars](https://img.shields.io/github/stars/lhmchyd/Shrimple-Music?style=for-the-badge)](https://github.com/lhmchyd/Shrimple-Music/stargazers)
 [![Forks](https://img.shields.io/github/forks/lhmchyd/Shrimple-Music?style=for-the-badge)](https://github.com/lhmchyd/Shrimple-Music/network/members)
 [![Issues](https://img.shields.io/github/issues/lhmchyd/Shrimple-Music?style=for-the-badge)](https://github.com/lhmchyd/Shrimple-Music/issues)
