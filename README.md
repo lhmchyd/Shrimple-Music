@@ -1,8 +1,15 @@
 # 🎵 Shrimple Music
 
+<div align="center">
+  
 [![Stars](https://img.shields.io/github/stars/lhmchyd/Shrimple-Music?style=for-the-badge)](https://github.com/lhmchyd/Shrimple-Music/stargazers)
 [![Forks](https://img.shields.io/github/forks/lhmchyd/Shrimple-Music?style=for-the-badge)](https://github.com/lhmchyd/Shrimple-Music/network/members)
 [![Issues](https://img.shields.io/github/issues/lhmchyd/Shrimple-Music?style=for-the-badge)](https://github.com/lhmchyd/Shrimple-Music/issues)
+
+  <img src="https://media-hosting.imagekit.io//9ab32c3ec4034b10/Asset%201.png?Expires=1835200285&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=OZGvk4HZRbczb~XnseFl~Gc96foLAiucntw3MGBowzCBr1jvitGmL~vcf1jn9DExlqOmXzUvWu9r5Ng3Jy7GXrUnhw0zTSq8Tegz3ycvTy7cnwfKdx6lCMC~tC2XA-hDf9H9TWxpCPlT9S2T0UFqxceV92QvFM6TG4oJY1QhKeqY5jCv7b-1LYo9rrH7wIYZnDn2FDBmvZlZMIMLH7zl1Q~W07tnQPuAEUD8hfyxhzbF8vvDnn7xpFjCO8QqF3aidl6E6wTcSZZ19W7YQ1-ItCgsE3yq737~vh8BYBU5zVGnGXivOzHEiWhra~COq1UAmxv0Dqz1g7LPARD0ih0-DA__" width="50%">
+
+</div>   
+
 
 Shrimple Music is a **lightweight**, **minimalist**, and **responsive** music player built for seamless playback on **desktop and mobile** devices. It allows users to **search, queue, and play** their favorite tracks in a simple yet powerful interface.
 
