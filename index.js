@@ -731,15 +731,37 @@ window.handleDrop = handleDrop;
 // Add this function to initialize event listeners
 function initializeEventListeners() {
     // Search functionality
-    document.getElementById('heroSearchInput').addEventListener('keypress', e => {
-        if(e.key === 'Enter') searchFromHero();
-    });
-    document.getElementById('searchInput').addEventListener('keypress', e => {
-        if(e.key === 'Enter') search();
+    const heroInput = document.getElementById('heroSearchInput');
+    const searchInput = document.getElementById('searchInput');
+
+    // Handle keyboard events for hero search
+    heroInput.addEventListener('keydown', e => {
+        if(e.key === 'Enter' || e.keyCode === 13) {
+            e.preventDefault();
+            searchFromHero();
+        }
     });
 
-    // Remove searchBtn event listener since we removed the button from HTML
-    
+    // Handle form submission for hero search (mobile)
+    heroInput.addEventListener('search', e => {
+        e.preventDefault();
+        searchFromHero();
+    });
+
+    // Handle keyboard events for main search
+    searchInput.addEventListener('keydown', e => {
+        if(e.key === 'Enter' || e.keyCode === 13) {
+            e.preventDefault();
+            search();
+        }
+    });
+
+    // Handle form submission for main search (mobile)
+    searchInput.addEventListener('search', e => {
+        e.preventDefault();
+        search();
+    });
+
     // Player controls
     document.getElementById('shuffleBtn').addEventListener('click', toggleShuffle);
     document.getElementById('prevBtn').addEventListener('click', playPrevious);
