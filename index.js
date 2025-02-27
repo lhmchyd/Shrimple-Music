@@ -20,6 +20,10 @@ async function initializeFavorites() {
     try {
         favorites = await getFavorites();
         updateQueue(); // Refresh the UI with loaded favorites
+        // Add this: Initialize empty playlist if not already set
+        if (!playlist) {
+            playlist = [];
+        }
     } catch (error) {
         console.error('Error loading favorites:', error);
         favorites = [];
@@ -146,6 +150,10 @@ function playSong(videoId, title, artist, thumbnail) {
 
     try {
         currentVideoId = videoId;
+        // Add this: Add the song to playlist if it doesn't exist
+        if (!playlist.some(song => song.videoId === videoId)) {
+            playlist.push({ videoId, title, artist, thumbnail });
+        }
         currentIndex = playlist.findIndex(song => song.videoId === videoId);
         
         // Update player and UI
@@ -584,6 +592,17 @@ function updateQueue() {
 function playQueueItem(videoId, encodedTitle, encodedArtist, thumbnail) {
     const title = decodeURIComponent(encodedTitle);
     const artist = decodeURIComponent(encodedArtist);
+    // Add this: Check if the song is from favorites
+    const isFromFavorites = favorites.some(f => f.videoId === videoId);
+    
+    if (isFromFavorites) {
+        // If playing from favorites, update the current index in favorites
+        currentIndex = favorites.findIndex(f => f.videoId === videoId);
+    } else {
+        // If playing from search results, update the current index in playlist
+        currentIndex = playlist.findIndex(song => song.videoId === videoId);
+    }
+    
     playSong(videoId, title, artist, thumbnail);
 }
 
