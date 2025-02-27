@@ -592,7 +592,6 @@ function removeFromFavorites(event, index) {
     event.stopPropagation(); // Prevent playing the song when removing
     const removedSong = favorites[index];
     favorites.splice(index, 1);
-    localStorage.setItem('favorites', JSON.stringify(favorites));
     
     // Update all favorite buttons for this song
     if (removedSong) {
@@ -682,7 +681,6 @@ function handleDrop(event) {
                 // Reorder favorites
                 const [movedItem] = favorites.splice(fromIndex, 1);
                 favorites.splice(toIndex, 0, movedItem);
-                localStorage.setItem('favorites', JSON.stringify(favorites));
             } else {
                 // Reorder queue
                 const [movedItem] = playlist.splice(fromIndex, 1);
