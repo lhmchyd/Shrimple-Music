@@ -13,7 +13,7 @@
 
 Shrimple Music is a **lightweight**, **minimalist**, and **responsive** music player built for seamless playback on **desktop and mobile** devices. It allows users to **search, queue, and play** their favorite tracks in a simple yet powerful interface.
 
-📌 **Live Demo:** [Shrimple Music](https://shrimple-music.netlify.app)
+📌 **Live Demo:** [Shrimple Music](https://shrimple-music.vercel.app/)
 
 🤖 **Disclaimer:** Using both Copilot and OpenAI to make this my first project.
 
@@ -37,6 +37,7 @@ Shrimple Music is a **lightweight**, **minimalist**, and **responsive** music pl
 ✅ **Search Functionality** – Quickly find and play tracks.  
 ✅ **Playback Controls** – Play, pause, skip, and volume controls.  
 ✅ **Dark Mode** – Enjoy a modern dark UI.  
+✅ **Drag & Drop** – Drag & drop to organize the favorites music.  
 
 ---
 
@@ -44,7 +45,7 @@ Shrimple Music is a **lightweight**, **minimalist**, and **responsive** music pl
 
 To set up **Shrimple Music** locally, follow these steps:
 
-###  Clone the Repository
+### 1️⃣ Clone the Repository
 ```bash
 git clone https://github.com/lhmchyd/Shrimple-Music.git
 ```
@@ -57,11 +58,12 @@ npm install
 npm run dev
 ```
 ### 4️⃣ This will launch the server, and you can access the application by navigating to `http://localhost:3000` in your browser.
-```bash
-http://localhost:3000
-```
+http://localhost:3000   
+
 ## Built with
-- [youtube-sr](https://www.npmjs.com/package/youtube-sr)
+- [express](https://expressjs.com/en/starter/installing.html)
+- [cors](https://www.npmjs.com/package/cors)
+- [youtube-sr](https://www.npmjs.com/package/youtube-sr)   
 
-
+## License
 [MIT](./LICENSE) License &copy; 2025
