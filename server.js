@@ -1,14 +1,15 @@
 import express from 'express';
 import cors from 'cors';
 import YouTube from 'youtube-sr';
+import { initSessionStore, getSession, saveSession, cleanOldSessions } from './src/js/sessionStore.js';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
-// Store active sessions with their last request timestamp
-const activeSessions = new Map();
+// Initialize session store
+initSessionStore();
 
 // Session middleware
 const sessionHandler = (req, res, next) => {
@@ -18,17 +19,16 @@ const sessionHandler = (req, res, next) => {
         return res.status(401).json({ error: 'No session token provided' });
     }
 
-    const session = activeSessions.get(sessionToken);
     const now = Date.now();
+    const session = getSession(sessionToken);
 
     if (!session) {
-        activeSessions.set(sessionToken, { lastRequest: now, requestCount: 1 });
+        saveSession(sessionToken, { lastRequest: now, requestCount: 1 });
         return next();
     }
 
     if (now - session.lastRequest >= 60000) {
-        session.requestCount = 1;
-        session.lastRequest = now;
+        saveSession(sessionToken, { lastRequest: now, requestCount: 1 });
         return next();
     }
 
@@ -36,12 +36,14 @@ const sessionHandler = (req, res, next) => {
         return res.status(429).json({
             error: 'Rate limit exceeded',
             retryAfter: 60,
-            limitResetTime: session.lastRequest + 60000 // Add timestamp when limit resets
+            limitResetTime: session.lastRequest + 60000
         });
     }
 
-    session.requestCount++;
-    session.lastRequest = now;
+    saveSession(sessionToken, {
+        lastRequest: now,
+        requestCount: session.requestCount + 1
+    });
     next();
 };
 
@@ -49,14 +51,7 @@ const sessionHandler = (req, res, next) => {
 app.use('/api/search', sessionHandler);
 
 // Clean up old sessions every hour
-setInterval(() => {
-    const oneHourAgo = Date.now() - 3600000;
-    for (const [token, session] of activeSessions) {
-        if (session.lastRequest < oneHourAgo) {
-            activeSessions.delete(token);
-        }
-    }
-}, 3600000);
+setInterval(cleanOldSessions, 3600000);
 
 app.get('/api/search', async (req, res, next) => {
     try {
