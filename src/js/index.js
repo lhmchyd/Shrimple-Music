@@ -1,4 +1,4 @@
-import { initDB, getFavorites, addFavorite, removeFavorite } from './db.js';
+import { initDB, getFavorites, addFavorite, removeFavorite } from '/src/js/db.js';
 
 let tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
@@ -83,7 +83,7 @@ async function search() {
         resultsDiv.innerHTML = loadingCards;
         
         // Fetch search results
-        const response = await fetch(`http://localhost:3000/api/search?query=${encodeURIComponent(query)}`);
+        const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
         if (!response.ok) throw new Error('Search request failed');
         
         const results = await response.json();

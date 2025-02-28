@@ -2,14 +2,14 @@
 <html>
 <head>
     <title>Shrimple Music</title>
-    <link rel="icon" type="image/x-icon" href="favicon.png">
+    <link rel="icon" type="image/x-icon" href="/src/img/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Add cache prevention meta tags -->
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="/src/css/index.css">
+    <link rel="stylesheet" href="/src/css/mobile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
@@ -176,7 +176,17 @@
     <!-- Update player div with specific ID and keep it visible for debugging -->
     <div id="player" style="position: fixed; bottom: -9999px;"></div>
     
-    <script src="db.js" type="module"></script>
-    <script src="index.js" type="module"></script>
+    <!-- Add environment configuration -->
+    <script>
+        window.config = {
+            apiBaseUrl: window.location.hostname === 'localhost' 
+                ? 'http://localhost:3000'
+                : window.location.origin
+        };
+    </script>
+    
+    <!-- Update module imports -->
+    <script src="/src/js/db.js" type="module"></script>
+    <script src="/src/js/index.js" type="module"></script>
 </body>
 </html>
