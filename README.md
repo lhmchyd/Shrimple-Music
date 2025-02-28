@@ -63,11 +63,7 @@ http://localhost:3000
 ## Built with
 - [express](https://expressjs.com/en/starter/installing.html)
 - [cors](https://www.npmjs.com/package/cors)
-- [youtube-sr](https://www.npmjs.com/package/youtube-sr)
-- [express-rate-limit](https://www.npmjs.com/package/express-rate-limit)
-- [node-cache](https://www.npmjs.com/package/node-cache)
-
-
+- [youtube-sr](https://www.npmjs.com/package/youtube-sr)   
 
 ## License
 [MIT](./LICENSE) License &copy; 2025

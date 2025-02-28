@@ -19,6 +19,15 @@ let favorites = [];
 let searchCooldown = false;
 let cooldownTimer = null;
 
+// Add these at the top with other variable declarations
+let sessionToken = localStorage.getItem('sessionToken');
+
+// Generate session token if not exists
+if (!sessionToken) {
+    sessionToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
+    localStorage.setItem('sessionToken', sessionToken);
+}
+
 // Add this to initialize favorites from IndexedDB
 async function initializeFavorites() {
     try {
@@ -135,49 +144,49 @@ async function search() {
         `).join('');
         resultsDiv.innerHTML = loadingCards;
         
-        // Fetch search results
-        const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+        // Add session token to request headers
+        const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`, {
+            headers: {
+                'X-Session-Token': sessionToken
+            }
+        });
         const data = await response.json();
 
         if (!response.ok) {
-            if (response.status === 429) { // Rate limit exceeded
-                // Start cooldown
+            if (response.status === 429) {
                 searchCooldown = true;
-                const retryAfter = data.retryAfter || 60; // Default to 60 seconds if not provided
+                const { retryAfter, limitResetTime } = data;
                 
-                resultsDiv.innerHTML = `
-                    <div class="search-error">
-                        <p>Too many searches. Please wait ${retryAfter} seconds.</p>
-                        <div class="cooldown-progress">
-                            <div class="cooldown-bar"></div>
-                        </div>
-                    </div>
-                `;
-
-                const cooldownBar = resultsDiv.querySelector('.cooldown-bar');
-                let timeLeft = retryAfter;
-
-                // Clear any existing timer
-                if (cooldownTimer) {
-                    clearInterval(cooldownTimer);
-                }
-
-                // Update cooldown bar
-                cooldownTimer = setInterval(() => {
-                    timeLeft--;
-                    const progress = ((retryAfter - timeLeft) / retryAfter) * 100;
-                    cooldownBar.style.width = `${progress}%`;
-
+                const cooldownDisplay = document.createElement('div');
+                cooldownDisplay.className = 'search-error';
+                resultsDiv.innerHTML = '';
+                resultsDiv.appendChild(cooldownDisplay);
+                
+                function updateCooldownMessage() {
+                    const now = Date.now();
+                    const timeLeft = Math.max(0, Math.ceil((limitResetTime - now) / 1000));
+                    
                     if (timeLeft <= 0) {
-                        clearInterval(cooldownTimer);
                         searchCooldown = false;
-                        // Re-run search if there's still a query
                         if (document.getElementById('searchInput').value.trim()) {
                             search();
                         }
+                        return;
                     }
-                }, 1000);
-
+                    
+                    const progress = ((retryAfter - timeLeft) / retryAfter) * 100;
+                    
+                    cooldownDisplay.innerHTML = `
+                        <p>Too many searches. Please wait ${timeLeft} seconds.</p>
+                        <div class="cooldown-progress">
+                            <div class="cooldown-bar" style="width: ${progress}%"></div>
+                        </div>
+                    `;
+                    
+                    requestAnimationFrame(updateCooldownMessage);
+                }
+                
+                updateCooldownMessage();
                 return;
             }
             throw new Error(data.error || 'Search request failed');
