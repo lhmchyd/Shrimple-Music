@@ -15,6 +15,10 @@ let currentIndex = -1;
 let queue = [];
 let favorites = [];
 
+// Add these variables at the top with other declarations
+let searchCooldown = false;
+let cooldownTimer = null;
+
 // Add this to initialize favorites from IndexedDB
 async function initializeFavorites() {
     try {
@@ -61,6 +65,7 @@ function onPlayerReady(event) {
     console.log('Player is ready');
 }
 
+// Replace the search function
 async function search() {
     try {
         const query = document.getElementById('searchInput').value.trim();
@@ -69,6 +74,10 @@ async function search() {
         if (!query) {
             resultsDiv.innerHTML = '<p>Please enter a search term</p>';
             return;
+        }
+
+        if (searchCooldown) {
+            return; // Don't perform search if in cooldown
         }
 
         // Show loading cards
@@ -84,12 +93,55 @@ async function search() {
         
         // Fetch search results
         const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
-        if (!response.ok) throw new Error('Search request failed');
+        const data = await response.json();
+
+        if (!response.ok) {
+            if (response.status === 429) { // Rate limit exceeded
+                // Start cooldown
+                searchCooldown = true;
+                const retryAfter = data.retryAfter || 60; // Default to 60 seconds if not provided
+                
+                resultsDiv.innerHTML = `
+                    <div class="search-error">
+                        <p>Too many searches. Please wait ${retryAfter} seconds.</p>
+                        <div class="cooldown-progress">
+                            <div class="cooldown-bar"></div>
+                        </div>
+                    </div>
+                `;
+
+                const cooldownBar = resultsDiv.querySelector('.cooldown-bar');
+                let timeLeft = retryAfter;
+
+                // Clear any existing timer
+                if (cooldownTimer) {
+                    clearInterval(cooldownTimer);
+                }
+
+                // Update cooldown bar
+                cooldownTimer = setInterval(() => {
+                    timeLeft--;
+                    const progress = ((retryAfter - timeLeft) / retryAfter) * 100;
+                    cooldownBar.style.width = `${progress}%`;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(cooldownTimer);
+                        searchCooldown = false;
+                        // Re-run search if there's still a query
+                        if (document.getElementById('searchInput').value.trim()) {
+                            search();
+                        }
+                    }
+                }, 1000);
+
+                return;
+            }
+            throw new Error(data.error || 'Search request failed');
+        }
+
+        playlist = data;
         
-        const results = await response.json();
-        playlist = results;
-        
-        if (!Array.isArray(results) || results.length === 0) {
+        if (!Array.isArray(data) || data.length === 0) {
             resultsDiv.innerHTML = '<p>No results found</p>';
             return;
         }
@@ -101,7 +153,7 @@ async function search() {
         container.classList.add('has-results');
 
         // Update search results with new structure
-        resultsDiv.innerHTML = results.map(song => `
+        resultsDiv.innerHTML = data.map(song => `
             <div class="search-result" onclick="playSong('${song.videoId}', '${encodeURIComponent(song.title)}', '${encodeURIComponent(song.artist)}', '${song.thumbnail}')">
                 <div class="thumbnail-container">
                     <img src="${song.thumbnail}" alt="${song.title}">
@@ -149,6 +201,10 @@ function playSong(videoId, title, artist, thumbnail) {
     }
 
     try {
+        // Show player controls when first song is played
+        document.querySelectorAll('.player-controls').forEach(el => el.classList.add('active'));
+        document.querySelectorAll('.now-playing-section').forEach(el => el.classList.add('active'));
+
         currentVideoId = videoId;
         // Add this: Add the song to playlist if it doesn't exist
         if (!playlist.some(song => song.videoId === videoId)) {
@@ -262,26 +318,61 @@ function updateProgressBar() {
     }
 }
 
-// Add these new functions for progress bar handling
+// Replace initializeProgressBar function with this updated version
 function initializeProgressBar() {
-    const progressBar = document.getElementById('progressBar');
+    const progressBars = ['progressBar', 'mobileProgress'];
     
-    progressBar.addEventListener('mousedown', () => {
-        progressBar.setAttribute('data-seeking', 'true');
-    });
+    progressBars.forEach(id => {
+        const progressBar = document.getElementById(id);
+        
+        // Mouse events
+        progressBar.addEventListener('mousedown', () => {
+            progressBar.setAttribute('data-seeking', 'true');
+        });
 
-    progressBar.addEventListener('mouseup', () => {
-        progressBar.removeAttribute('data-seeking');
-        const time = (player.getDuration() * progressBar.value) / 100;
-        player.seekTo(time, true);
-    });
+        progressBar.addEventListener('mouseup', () => {
+            progressBar.removeAttribute('data-seeking');
+            const time = (player.getDuration() * progressBar.value) / 100;
+            player.seekTo(time, true);
+        });
 
-    progressBar.addEventListener('input', (e) => {
-        const progress = e.target.value;
-        progressBar.style.setProperty('--progress', `${progress}%`);
-        const duration = player.getDuration();
-        const seekTime = (duration * progress) / 100;
-        document.getElementById('currentTime').textContent = formatTime(seekTime);
+        progressBar.addEventListener('input', (e) => {
+            const progress = e.target.value;
+            progressBar.style.setProperty('--progress', `${progress}%`);
+            const duration = player.getDuration();
+            const seekTime = (duration * progress) / 100;
+            const timeDisplay = id === 'progressBar' ? 'currentTime' : 'mobileCurrent';
+            document.getElementById(timeDisplay).textContent = formatTime(seekTime);
+        });
+
+        // Touch events
+        progressBar.addEventListener('touchstart', (e) => {
+            progressBar.setAttribute('data-seeking', 'true');
+            // Prevent screen from scrolling while seeking
+            e.preventDefault();
+        }, { passive: false });
+
+        progressBar.addEventListener('touchend', () => {
+            progressBar.removeAttribute('data-seeking');
+            const time = (player.getDuration() * progressBar.value) / 100;
+            player.seekTo(time, true);
+        });
+
+        progressBar.addEventListener('touchmove', (e) => {
+            e.preventDefault(); // Prevent screen scrolling
+            const touch = e.touches[0];
+            const progressRect = progressBar.getBoundingClientRect();
+            const percent = Math.max(0, Math.min(1, (touch.clientX - progressRect.left) / progressRect.width));
+            const progress = percent * 100;
+            
+            progressBar.value = progress;
+            progressBar.style.setProperty('--progress', `${progress}%`);
+            
+            const duration = player.getDuration();
+            const seekTime = duration * percent;
+            const timeDisplay = id === 'progressBar' ? 'currentTime' : 'mobileCurrent';
+            document.getElementById(timeDisplay).textContent = formatTime(seekTime);
+        }, { passive: false });
     });
 }
 

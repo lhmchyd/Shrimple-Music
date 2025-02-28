@@ -1,12 +1,19 @@
 @media screen and (max-width: 768px) {
     .hero-section {
         padding: 20px;
+        background: linear-gradient(135deg, 
+            var(--color-primary) 0%, 
+            rgba(29, 185, 84, 0.8) 30%,
+            rgba(25, 20, 20, 1) 100%
+        );
+        animation: fadeIn 0.3s ease-out;
     }
     
     .hero-section h1 {
         font-size: 32px;
         margin-bottom: 32px;
         text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        animation: slideDown 0.5s ease-out;
     }
     
     .hero-section .search-box {
@@ -107,6 +114,13 @@
         box-sizing: border-box;
         max-width: 100%;
         margin: 0;
+        backdrop-filter: blur(8px);
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .search-result:active {
+        transform: scale(0.98);
+        background: var(--color-surface-hover);
     }
 
     .search-result .thumbnail-container {
@@ -177,6 +191,8 @@
         background: var(--color-surface);
         transition: background-color 0.2s ease;
         cursor: pointer; /* Add cursor pointer to indicate clickability */
+        backdrop-filter: blur(12px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .player-controls.minimized:active {
@@ -197,6 +213,7 @@
         flex-direction: column;
         justify-content: space-between;
         transition: all 0.3s ease;
+        /*animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);*/
     }
 
     .player-controls.expanded .close-button {
@@ -222,6 +239,8 @@
         box-shadow: 0 8px 24px rgba(0,0,0,0.4);
         border-radius: 8px;
         overflow: hidden;
+        transform: scale(1);
+        animation: expandArt 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
     .player-controls.expanded .thumbnail-container img {
@@ -235,6 +254,8 @@
         width: 100%;
         text-align: center;
         margin-bottom: 32px;
+        animation: fadeInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        animation-delay: 0.1s;
     }
 
     .player-controls.expanded .song-title {
@@ -276,6 +297,8 @@
         width: 100%;
         padding: 0 16px;
         margin: 24px 0;
+        /*animation: fadeInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;*/
+        animation-delay: 0.2s;
     }
 
     .player-controls.expanded #mobilePlayPauseBtn {
@@ -306,6 +329,8 @@
         background: none;
         border: none;
         padding: 8px;
+        position: relative;
+        overflow: hidden;
     }
 
     .player-controls.expanded .control-buttons .material-icons {
@@ -369,8 +394,14 @@
         padding: 8px 0;
         position: relative;
         pointer-events: auto; /* Ensure clicks are registered */
+        transform: translateX(0);
+        transition: transform 0.3s ease;
     }
     
+    .player-controls.minimized:active .now-playing {
+        transform: translateX(8px);
+    }
+
     /* Show play/pause in minimized state */
     .player-controls.minimized .mini-play-button {
         display: flex;
@@ -498,6 +529,28 @@
         font-size: min(28px, 5vw);
     }
 
+    .control-buttons button {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .control-buttons button::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 150%;
+        height: 150%;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.2s ease;
+    }
+
+    .control-buttons button:active::after {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
     .progress-container {
         padding: 0 min(16px, 3vw);
         gap: min(8px, 2vw);
@@ -510,6 +563,14 @@
         height: 72px;
         align-items: center;
         gap: 12px;
+        background: linear-gradient(
+            90deg,
+            var(--color-surface) 0%,
+            var(--color-surface-hover) 50%,
+            var(--color-surface) 100%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
     }
 
     .skeleton-thumbnail {
@@ -544,11 +605,37 @@
         margin: 50px;
         margin-bottom: 25px;
         margin-bottom: 25px;
+        transform: translateY(100%);
+        backdrop-filter: blur(16px);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.2);
+        transform: translateY(100%);
+        opacity: 0;
+        transition: transform var(--transition-standard),
+                    opacity var(--transition-standard);
+        will-change: transform, opacity;
     }
 
     .mobile-queue-panel.active {
         bottom: 64px; /* Height of the minimized player */
         display: block;
+        transform: translateY(0);
+        opacity: 1;
+        animation: queuePanelEnter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes queuePanelEnter {
+        0% {
+            transform: translateY(30%);
+            opacity: 0;
+            backdrop-filter: blur(0px);
+        }
+          100% {
+            transform: translateY(0);
+            opacity: 1;
+            backdrop-filter: blur(16px);
+        }
     }
 
     .mobile-queue-header {
@@ -576,6 +663,7 @@
         height: calc(100% - 60px);
         overflow-y: auto;
         -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
+        scroll-behavior: smooth;
     }
 
     .mobile-now-playing-section,
@@ -600,6 +688,25 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .queue-toggle-button::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 150%;
+        height: 150%;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.2s ease;
+    }
+
+    .queue-toggle-button:active::after {
+        transform: translate(-50%, -50%) scale(1);
     }
 
     /* Ensure desktop queue panel remains hidden on mobile */
@@ -659,6 +766,9 @@
         display: flex;
         align-items: center;
         gap: 12px;
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                    background-color 0.2s ease;
+        border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     /* Remove the arrow indicator styles */
@@ -667,15 +777,13 @@
     }
 
     .mobile-queue-panel .queue-item:active {
-        transform: scale(0.98);
+        transform: scale(0.98) translateX(4px);
     }
 
     .mobile-queue-panel .queue-item.current {
-        background: var(--color-primary);
-    }
-
-    .mobile-queue-panel .queue-item.current::before {
-        display: none;
+        background: rgba(29, 185, 84, 0.1);
+        border-color: rgba(29, 185, 84, 0.2);
+        box-shadow: var(--glow-primary);
     }
 
     .mobile-queue-panel .thumbnail-container {
@@ -888,7 +996,7 @@
 
     /* Style for current playing item */
     .mobile-queue-panel .queue-item.current {
-        background: var(--color-surface-hover);
+        /*background: var(--color-surface-hover);*/
     }
 
     .mobile-queue-panel #mobileNowPlayingQueue.queue-item.current .info {
@@ -937,6 +1045,215 @@
 
     .github-button {
         visibility: hidden;  /* Hide GitHub button on mobile */
+    }
+
+    /* Enhanced animations */
+    @keyframes slideUp {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideDown {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    /* Enhanced mobile player transitions */
+    .player-controls.expanded .thumbnail-container {
+        transform: scale(1);
+        animation: expandArt 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    .player-controls.expanded .song-info {
+        animation: fadeInUp 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        animation-delay: 0.1s;
+    }
+
+    .player-controls.expanded .control-buttons {
+        animation-delay: 0.2s;
+    }
+
+    @keyframes expandArt {
+        from {
+            transform: scale(0.5);
+            opacity: 0;
+        }
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    /* Enhanced touch feedback */
+    .control-buttons button {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .control-buttons button::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 150%;
+        height: 150%;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.2s ease;
+    }
+
+    .control-buttons button:active::after {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* Enhanced progress bar interaction */
+    #mobileProgress {
+        /* ...existing progress properties... */
+        transition: height 0.2s ease;
+    }
+
+    #mobileProgress:active {
+        height: 8px;
+    }
+
+    /* Smooth scrolling for queue lists */
+    .mobile-queue-content {
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Enhanced minimized player */
+    .player-controls.minimized .now-playing {
+        transform: translateX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .player-controls.minimized:active .now-playing {
+        transform: translateX(8px);
+    }
+
+    /* Loading states */
+    .skeleton-card {
+        /* ...existing skeleton properties... */
+        background: linear-gradient(
+            90deg,
+            var(--color-surface) 0%,
+            var(--color-surface-hover) 50%,
+            var(--color-surface) 100%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    /* Animate queue items when panel becomes active */
+    .mobile-queue-panel.active .queue-item {
+        /*animation: queueItemEnter 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;*/
+    }
+
+    .mobile-queue-panel.active .queue-item:nth-child(n) {
+        animation-delay: calc(n * 0.05s);
+    }
+
+    @keyframes queueItemEnter {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    /* Enhanced progress bar touch interaction */
+    #mobileProgress {
+        height: 4px;
+        margin: 12px 0;
+        position: relative;
+        touch-action: none; /* Prevent default touch actions */
+    }
+
+    /* Add touch target padding without affecting visuals */
+    #mobileProgress::before {
+        content: '';
+        position: absolute;
+        left: -8px;
+        right: -8px;
+        top: -8px;
+        bottom: -8px;
+        z-index: -1;
+    }
+
+    #mobileProgress:active,
+    #mobileProgress[data-seeking="true"] {
+        height: 8px;
+    }
+
+    #mobileProgress::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        background: var(--color-text);
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    #mobileProgress:active::-webkit-slider-thumb,
+    #mobileProgress[data-seeking="true"]::-webkit-slider-thumb {
+        opacity: 1;
+    }
+
+    /* For Firefox */
+    #mobileProgress::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        background: var(--color-text);
+        border: none;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    #mobileProgress:active::-moz-range-thumb,
+    #mobileProgress[data-seeking="true"]::-moz-range-thumb {
+        opacity: 1;
     }
 }
 
