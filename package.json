@@ -1,6 +1,6 @@
 {
-  "name": "pwa-music",
-  "version": "1.0.0",
+  "name": "shrimple-music",
+  "version": "1.0",
   "main": "server.js",
   "type": "module",
   "scripts": {
