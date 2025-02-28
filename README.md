@@ -57,9 +57,8 @@ npm install
 npm run dev
 ```
 ### 4️⃣ This will launch the server, and you can access the application by navigating to `http://localhost:3000` in your browser.
-```bash
-http://localhost:3000
-```
+http://localhost:3000   
+
 ## Built with
 - [express](https://expressjs.com/en/starter/installing.html)
 - [cors](https://www.npmjs.com/package/cors)
