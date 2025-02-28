@@ -1,43 +1,62 @@
 import express from 'express';
 import cors from 'cors';
 import YouTube from 'youtube-sr';
-import rateLimit from 'express-rate-limit';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
-// Create rate limiter
-const newSearchLimiter = rateLimit({
-    windowMs: 60 * 1000, // 1 minute
-    max: 5, // 5 requests per minute
-    message: { 
-        error: 'Rate limit exceeded',
-        retryAfter: 60
-    },
-    standardHeaders: true,
-    legacyHeaders: false,
-});
+// Store active sessions with their last request timestamp
+const activeSessions = new Map();
 
-// Apply middleware chain
-app.use('/api/search', newSearchLimiter);
+// Session middleware
+const sessionHandler = (req, res, next) => {
+    const sessionToken = req.headers['x-session-token'];
+    
+    if (!sessionToken) {
+        return res.status(401).json({ error: 'No session token provided' });
+    }
 
-// Add no-cache headers middleware
-app.use((req, res, next) => {
-    res.set({
-        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
-        'Pragma': 'no-cache',
-        'Expires': '0'
-    });
+    const session = activeSessions.get(sessionToken);
+    const now = Date.now();
+
+    if (!session) {
+        activeSessions.set(sessionToken, { lastRequest: now, requestCount: 1 });
+        return next();
+    }
+
+    if (now - session.lastRequest >= 60000) {
+        session.requestCount = 1;
+        session.lastRequest = now;
+        return next();
+    }
+
+    if (session.requestCount >= 5) {
+        return res.status(429).json({
+            error: 'Rate limit exceeded',
+            retryAfter: 60,
+            limitResetTime: session.lastRequest + 60000 // Add timestamp when limit resets
+        });
+    }
+
+    session.requestCount++;
+    session.lastRequest = now;
     next();
-});
+};
 
-// Error handler middleware
-app.use((err, req, res, next) => {
-    console.error('Server error:', err.stack);
-    res.status(500).json({ error: 'Something broke!' });
-});
+// Apply session middleware to search endpoint
+app.use('/api/search', sessionHandler);
+
+// Clean up old sessions every hour
+setInterval(() => {
+    const oneHourAgo = Date.now() - 3600000;
+    for (const [token, session] of activeSessions) {
+        if (session.lastRequest < oneHourAgo) {
+            activeSessions.delete(token);
+        }
+    }
+}, 3600000);
 
 app.get('/api/search', async (req, res, next) => {
     try {
