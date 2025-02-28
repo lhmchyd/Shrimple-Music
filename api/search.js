@@ -1,5 +1,8 @@
 import YouTube from 'youtube-sr';
 
+// Simple in-memory rate limiting for serverless
+const rateLimits = new Map();
+
 export default async function handler(req, res) {
     // Enable CORS
     res.setHeader('Access-Control-Allow-Credentials', true);
@@ -9,6 +12,43 @@ export default async function handler(req, res) {
         'Access-Control-Allow-Headers',
         'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
     );
+
+    const sessionToken = req.headers['x-session-token'];
+    const clientIp = req.headers['x-forwarded-for'] || req.ip;
+    const key = `${sessionToken}-${clientIp}`;
+    const now = Date.now();
+
+    if (!sessionToken) {
+        return res.status(401).json({ error: 'No session token provided' });
+    }
+
+    // Clean old entries
+    for (const [storedKey, storedSession] of rateLimits.entries()) {
+        if (now - storedSession.lastRequest > 3600000) {
+            rateLimits.delete(storedKey);
+        }
+    }
+
+    const session = rateLimits.get(key);
+    
+    if (!session) {
+        rateLimits.set(key, { lastRequest: now, requestCount: 1 });
+    } else {
+        if (now - session.lastRequest >= 60000) {
+            session.requestCount = 1;
+            session.lastRequest = now;
+        } else if (session.requestCount >= 5) {
+            const timeLeft = 60000 - (now - session.lastRequest);
+            return res.status(429).json({
+                error: 'Rate limit exceeded',
+                retryAfter: Math.ceil(timeLeft / 1000),
+                limitResetTime: session.lastRequest + 60000
+            });
+        } else {
+            session.requestCount++;
+            session.lastRequest = now;
+        }
+    }
 
     // Handle preflight request
     if (req.method === 'OPTIONS') {
