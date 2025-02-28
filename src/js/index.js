@@ -65,6 +65,42 @@ function onPlayerReady(event) {
     console.log('Player is ready');
 }
 
+// Add the displayResults function
+function displayResults(data) {
+    const resultsDiv = document.getElementById('searchResults');
+    
+    if (!Array.isArray(data) || data.length === 0) {
+        resultsDiv.innerHTML = '<p>No results found</p>';
+        return;
+    }
+
+    // Hide hero section and show container with results
+    const heroSection = document.querySelector('.hero-section');
+    const container = document.querySelector('.container');
+    heroSection.style.display = 'none';
+    container.classList.add('has-results');
+
+    // Update search results with new structure
+    resultsDiv.innerHTML = data.map(song => `
+        <div class="search-result" onclick="playSong('${song.videoId}', '${encodeURIComponent(song.title)}', '${encodeURIComponent(song.artist)}', '${song.thumbnail}')">
+            <div class="thumbnail-container">
+                <img src="${song.thumbnail}" alt="${song.title}">
+            </div>
+            <div class="info">
+                <h3>${decodeURIComponent(song.title)}</h3>
+                <div class="artist">${decodeURIComponent(song.artist)}</div>
+            </div>
+            <button class="favorite-btn ${isFavorite(song) ? 'active' : ''}" 
+                onclick="toggleFavorite(event, '${song.videoId}', '${encodeURIComponent(song.title)}', '${encodeURIComponent(song.artist)}', '${song.thumbnail}')">
+                <span class="material-icons">${isFavorite(song) ? 'favorite' : 'favorite_border'}</span>
+            </button>
+        </div>
+    `).join('');
+
+    // Update playlist with search results
+    playlist = data;
+}
+
 // Replace the search function
 async function search() {
     try {
@@ -78,6 +114,14 @@ async function search() {
 
         if (searchCooldown) {
             return; // Don't perform search if in cooldown
+        }
+
+        // Check sessionStorage first
+        const cachedResults = sessionStorage.getItem(`search_${query}`);
+        if (cachedResults) {
+            console.log('Returning cached results for:', query);
+            displayResults(JSON.parse(cachedResults));
+            return;
         }
 
         // Show loading cards
@@ -139,35 +183,11 @@ async function search() {
             throw new Error(data.error || 'Search request failed');
         }
 
-        playlist = data;
-        
-        if (!Array.isArray(data) || data.length === 0) {
-            resultsDiv.innerHTML = '<p>No results found</p>';
-            return;
-        }
+        // Store in sessionStorage
+        sessionStorage.setItem(`search_${query}`, JSON.stringify(data));
 
-        // Hide hero section and show container with results
-        const heroSection = document.querySelector('.hero-section');
-        const container = document.querySelector('.container');
-        heroSection.style.display = 'none';
-        container.classList.add('has-results');
-
-        // Update search results with new structure
-        resultsDiv.innerHTML = data.map(song => `
-            <div class="search-result" onclick="playSong('${song.videoId}', '${encodeURIComponent(song.title)}', '${encodeURIComponent(song.artist)}', '${song.thumbnail}')">
-                <div class="thumbnail-container">
-                    <img src="${song.thumbnail}" alt="${song.title}">
-                </div>
-                <div class="info">
-                    <h3>${decodeURIComponent(song.title)}</h3>
-                    <div class="artist">${decodeURIComponent(song.artist)}</div>
-                </div>
-                <button class="favorite-btn ${isFavorite(song) ? 'active' : ''}" 
-                    onclick="toggleFavorite(event, '${song.videoId}', '${encodeURIComponent(song.title)}', '${encodeURIComponent(song.artist)}', '${song.thumbnail}')">
-                    <span class="material-icons">${isFavorite(song) ? 'favorite' : 'favorite_border'}</span>
-                </button>
-            </div>
-        `).join('');
+        // Use the displayResults function
+        displayResults(data);
         
     } catch (error) {
         console.error('Search error:', error);
