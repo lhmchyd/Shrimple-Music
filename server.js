@@ -73,7 +73,7 @@ app.get('/api/search', async (req, res, next) => {
             videoId: video.id,
             title: video.title,
             artist: video.channel?.name || 'Unknown Artist',
-            thumbnail: video.thumbnail?.url || video.thumbnails?.[0]?.url
+            thumbnail: `https://i.ytimg.com/vi/${video.id}/mqdefault.jpg`
         }));
         
         res.json(formattedResults);
