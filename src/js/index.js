@@ -259,6 +259,8 @@ function playSong(videoId, title, artist, thumbnail) {
         if (window.innerWidth <= 768) {
             expandPlayer();
         }
+        updatePlayerUI(title, artist, thumbnail);
+        updateNowPlaying();
         updateQueue();
     } catch (error) {
         console.error('Error playing song:', error);
@@ -638,12 +640,14 @@ window.addEventListener('load', function() {
     onYouTubeIframeAPIReady();
 });
 
-function updateQueue() {
-    // Update Now Playing
+// Add new function to update now playing UI
+function updateNowPlaying() {
     const nowPlayingQueue = document.getElementById('nowPlayingQueue');
+    const mobileNowPlayingQueue = document.getElementById('mobileNowPlayingQueue');
+    
     if (currentIndex !== -1 && playlist[currentIndex]) {
         const current = playlist[currentIndex];
-        nowPlayingQueue.innerHTML = `
+        const nowPlayingHtml = `
             <img src="${current.thumbnail}" alt="${current.title}">
             <div class="queue-info">
                 <div class="queue-title">${current.title}</div>
@@ -654,23 +658,34 @@ function updateQueue() {
                 <span class="material-icons">${isFavorite(current) ? 'favorite' : 'favorite_border'}</span>
             </button>
         `;
+        
+        // Update both desktop and mobile now playing
+        nowPlayingQueue.innerHTML = nowPlayingHtml;
+        mobileNowPlayingQueue.innerHTML = nowPlayingHtml;
+        mobileNowPlayingQueue.classList.add('queue-item', 'current');
     }
+}
 
+// Modify updateQueue to remove now playing update
+function updateQueue() {
+    // Determine which list to display based on favorites
+    const showFavorites = shouldShowFavorites();
+    const displayList = showFavorites ? favorites : playlist.slice(currentIndex + 1);
+    
     // Update section header
     const sectionTitle = document.querySelector('.next-up-section h2');
-    sectionTitle.textContent = shouldShowFavorites() ? 'Favorites' : 'Next Up';
+    sectionTitle.textContent = showFavorites ? 'Favorites' : 'Next Up';
     
     // Hide the toggle button since we don't need it anymore
     const viewBtn = document.getElementById('viewToggleBtn');
     if (viewBtn) viewBtn.style.display = 'none';
 
-    // Update Queue List based on favorites presence
+    // Update Queue List
     const queueList = document.getElementById('queueList');
-    const displayList = shouldShowFavorites() ? favorites : playlist.slice(currentIndex + 1);
     let queueHtml = '';
     
     if (displayList.length === 0) {
-        queueHtml = '<div class="empty-message">No songs in ' + (shouldShowFavorites() ? 'favorites' : 'queue') + '</div>';
+        queueHtml = '<div class="empty-message">No songs in ' + (showFavorites ? 'favorites' : 'queue') + '</div>';
     } else {
         displayList.forEach((song, index) => {
             const actualIndex = shouldShowFavorites() ? index : currentIndex + 1 + index;
@@ -727,21 +742,28 @@ function playQueueItem(videoId, encodedTitle, encodedArtist, thumbnail) {
 }
 
 // Update removeFromFavorites function to refresh all favorite buttons
-function removeFromFavorites(event, index) {
+async function removeFromFavorites(event, index) {
     event.stopPropagation(); // Prevent playing the song when removing
     const removedSong = favorites[index];
-    favorites.splice(index, 1);
     
-    // Update all favorite buttons for this song
-    if (removedSong) {
-        const allFavoriteButtons = document.querySelectorAll(`button[onclick*="${removedSong.videoId}"]`);
-        allFavoriteButtons.forEach(btn => {
-            btn.classList.remove('active');
-            btn.querySelector('.material-icons').textContent = 'favorite_border';
-        });
+    try {
+        await removeFavorite(removedSong.videoId);
+        favorites.splice(index, 1);
+        
+        // Update all favorite buttons for this song
+        if (removedSong) {
+            const allFavoriteButtons = document.querySelectorAll(`button[onclick*="${removedSong.videoId}"]`);
+            allFavoriteButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.querySelector('.material-icons').textContent = 'favorite_border';
+            });
+        }
+        
+        // Force update queue to switch to Next Up if no favorites remain
+        updateQueue();
+    } catch (error) {
+        console.error('Error removing favorite:', error);
     }
-    
-    updateQueue();
 }
 
 // Replace the toggleFavorite function
@@ -761,7 +783,7 @@ async function toggleFavorite(event, videoId, encodedTitle, encodedArtist, thumb
             favorites.splice(index, 1);
         }
         
-        // Update all favorite buttons for this song
+        // Update only the favorite buttons for this song
         const allFavoriteButtons = document.querySelectorAll(`button[onclick*="${videoId}"]`);
         allFavoriteButtons.forEach(btn => {
             btn.classList.toggle('active');
@@ -769,6 +791,7 @@ async function toggleFavorite(event, videoId, encodedTitle, encodedArtist, thumb
                 index === -1 ? 'favorite' : 'favorite_border';
         });
         
+        // Always update queue when favorites change
         updateQueue();
     } catch (error) {
         console.error('Error updating favorite:', error);
@@ -842,8 +865,9 @@ function removeFromQueue(index) {
     }
 }
 
+// Update shouldShowFavorites to be more explicit
 function shouldShowFavorites() {
-    return favorites.length > 0;
+    return Array.isArray(favorites) && favorites.length > 0;
 }
 
 // Expose functions to global scope
@@ -971,24 +995,31 @@ function toggleMobileQueue(event) {
 
 function updateMobileQueue() {
     const mobileNowPlayingQueue = document.getElementById('mobileNowPlayingQueue');
-    if (currentIndex !== -1 && playlist[currentIndex]) {
-        const current = playlist[currentIndex];
+    
+    // Find the current playing song, checking both playlist and favorites
+    let currentSong;
+    if (currentVideoId) {
+        currentSong = [...playlist, ...favorites].find(song => song.videoId === currentVideoId);
+    }
+    
+    if (currentSong) {
         mobileNowPlayingQueue.innerHTML = `
             <div class="thumbnail-container">
-                <img src="${current.thumbnail}" alt="${current.title}">
+                <img src="${currentSong.thumbnail}" alt="${currentSong.title}">
             </div>
-            <div class="info">
-                <div class="title">${current.title}</div>
-                <div class="artist">${current.artist}</div>
+            <div class="queue-info">
+                <div class="queue-title">${currentSong.title}</div>
+                <div class="queue-artist">${currentSong.artist}</div>
             </div>
-            <button class="favorite-btn ${isFavorite(current) ? 'active' : ''}" 
-                onclick="toggleFavorite(event, '${current.videoId}', '${encodeURIComponent(current.title)}', '${encodeURIComponent(current.artist)}', '${current.thumbnail}')">
-                <span class="material-icons">${isFavorite(current) ? 'favorite' : 'favorite_border'}</span>
+            <button class="favorite-btn ${isFavorite(currentSong) ? 'active' : ''}" 
+                onclick="toggleFavorite(event, '${currentSong.videoId}', '${encodeURIComponent(currentSong.title)}', '${encodeURIComponent(currentSong.artist)}', '${currentSong.thumbnail}')">
+                <span class="material-icons">${isFavorite(currentSong) ? 'favorite' : 'favorite_border'}</span>
             </button>
         `;
         mobileNowPlayingQueue.classList.add('queue-item', 'current');
     }
 
+    // Rest of the updateMobileQueue function remains the same
     // Update Queue List
     const mobileQueueList = document.getElementById('mobileQueueList');
     const displayList = shouldShowFavorites() ? favorites : playlist.slice(currentIndex + 1);

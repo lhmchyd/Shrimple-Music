@@ -2,9 +2,9 @@
     .hero-section {
         padding: 20px;
         background: linear-gradient(135deg, 
-            var(--color-primary) 0%, 
-            rgba(29, 185, 84, 0.8) 30%,
-            rgba(25, 20, 20, 1) 100%
+            var(--color-background) 0%,
+            var(--color-surface-hover) 50%,
+            var(--color-background) 100%
         );
         animation: fadeIn 0.3s ease-out;
     }
@@ -12,20 +12,29 @@
     .hero-section h1 {
         font-size: 32px;
         margin-bottom: 32px;
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
         animation: slideDown 0.5s ease-out;
     }
     
     .hero-section .search-box {
         width: calc(100% - 32px);
-        padding: 4px;
+        padding: 8px 16px;
+        background: var(--color-surface);
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow-elevated);
+        border: 1px solid var(--color-border);
     }
     
     .hero-section #heroSearchInput {
-        padding: 12px 16px;
+        padding: 16px 0;
         font-size: 15px;
+        text-align: center;
     }
-    
+
+    .hero-section #heroSearchInput::placeholder {
+        color: var(--color-text-secondary);
+    }
+
     .hero-section .search-box button {
         padding: 10px 16px;
         font-size: 14px;
