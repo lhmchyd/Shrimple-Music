@@ -244,7 +244,7 @@ function playSong(videoId, title, artist, thumbnail) {
         // Update player and UI
         player.loadVideoById(videoId);
         updatePlayerUI(title, artist, thumbnail);
-        document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i>';
+        document.getElementById('playPauseBtn').innerHTML = '<span class="material-symbols-outlined">pause</span>';
         
         // Reset time display and progress bar
         document.getElementById('currentTime').textContent = '0:00';
@@ -281,20 +281,20 @@ function updatePlayerUI(title, artist, thumbnail) {
 
 function onPlayerStateChange(event) {
     const btn = document.getElementById('playPauseBtn');
-    const mobileBtn = document.querySelector('.mini-play-button .material-icons');
+    const mobileBtn = document.querySelector('.mini-play-button .material-symbols-outlined');
     
     switch(event.data) {
         case YT.PlayerState.PLAYING:
-            btn.innerHTML = '<i class="fas fa-pause"></i>';
+            btn.innerHTML = '<span class="material-symbols-outlined">pause</span>';
             mobileBtn.textContent = 'pause'; // Update mini button
             updateProgressBar();
             break;
         case YT.PlayerState.PAUSED:
-            btn.innerHTML = '<i class="fas fa-play"></i>';
+            btn.innerHTML = '<span class="material-symbols-outlined">play_arrow</span>';
             mobileBtn.textContent = 'play_arrow'; // Update mini button
             break;
         case YT.PlayerState.ENDED:
-            btn.innerHTML = '<i class="fas fa-play"></i>';
+            btn.innerHTML = '<span class="material-symbols-outlined">play_arrow</span>';
             mobileBtn.textContent = 'play_arrow'; // Update mini button
             document.getElementById('progressBar').value = 100;
             if (repeatMode === 2) {
@@ -310,7 +310,7 @@ function togglePlay(event) {
     if (event) event.stopPropagation(); // Prevent expansion when clicking play button
     if (!currentVideoId) return; // Don't do anything if no song is selected
     
-    const mobileBtn = document.querySelector('.mini-play-button .material-icons');
+    const mobileBtn = document.querySelector('.mini-play-button .material-symbols-outlined');
     
     if (player.getPlayerState() === YT.PlayerState.PLAYING) {
         player.pauseVideo();
@@ -463,7 +463,7 @@ function toggleShuffle() {
 function toggleRepeat() {
     repeatMode = (repeatMode + 1) % 3;
     const repeatBtn = document.getElementById('repeatBtn');
-    const icon = repeatBtn.querySelector('.material-icons');
+    const icon = repeatBtn.querySelector('.material-symbols-outlined');
     
     repeatBtn.classList.toggle('active-control', repeatMode > 0);
     icon.textContent = repeatMode === 2 ? 'repeat_one' : 'repeat';
@@ -755,7 +755,7 @@ async function removeFromFavorites(event, index) {
             const allFavoriteButtons = document.querySelectorAll(`button[onclick*="${removedSong.videoId}"]`);
             allFavoriteButtons.forEach(btn => {
                 btn.classList.remove('active');
-                btn.querySelector('.material-icons').textContent = 'favorite_border';
+                btn.querySelector('.material-symbols-outlined').textContent = 'favorite_border';
             });
         }
         

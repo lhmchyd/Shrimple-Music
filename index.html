@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="/src/css/index.css">
     <link rel="stylesheet" href="/src/css/mobile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons&icon_names=favorite,favorite_border" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=close,favorite,favorite_border,pause,play_arrow,queue_music,repeat,repeat_one,search,shuffle,skip_next,skip_previous,volume_down,volume_off,volume_up" />
 </head>
 <body>
     <div class="hero-section">
@@ -25,7 +26,7 @@
         <div class="content-wrapper">
             <div class="main-content">
                 <div class="search-box">
-                    <i class="fas fa-search"></i>
+                    <span class="material-symbols-outlined">search</span>
                     <input type="text" id="searchInput" placeholder="Search for songs, artists..." autocomplete="off" enterkeyhint="search" inputmode="search">
                 </div>
                 <div id="searchResults" class="search-results"></div>
@@ -71,19 +72,19 @@
             <div class="controls">
                 <div class="control-buttons">
                     <button id="shuffleBtn">
-                        <span class="material-icons">shuffle</span>
+                        <span class="material-symbols-outlined">shuffle</span>
                     </button>
                     <button id="prevBtn">
-                        <span class="material-icons">skip_previous</span>
+                        <span class="material-symbols-outlined">skip_previous</span>
                     </button>
                     <button id="playPauseBtn">
-                        <span class="material-icons">play_arrow</span>
+                        <span class="material-symbols-outlined">play_arrow</span>
                     </button>
                     <button id="nextBtn">
-                        <span class="material-icons">skip_next</span>
+                        <span class="material-symbols-outlined">skip_next</span>
                     </button>
                     <button id="repeatBtn">
-                        <span class="material-icons">repeat</span>
+                        <span class="material-symbols-outlined">repeat</span>
                     </button>
                 </div>
                 <div class="progress-container">
@@ -94,7 +95,7 @@
             </div>
             <div class="right-controls">
                 <div class="volume-control">
-                    <span class="material-icons" id="volumeIcon">volume_up</span>
+                    <span class="material-symbols-outlined" id="volumeIcon">volume_up</span>
                     <input type="range" id="volumeBar" min="0" max="100" value="100">
                 </div>
             </div>
@@ -104,7 +105,7 @@
         <div class="player-controls mobile-player minimized" onclick="expandPlayer()">
             <div class="expanded-controls" style="display: none;">
                 <button class="close-button" onclick="minimizePlayer()">
-                    <span class="material-icons">keyboard_arrow_down</span>
+                    <span class="material-symbols-outlined">keyboard_arrow_down</span>
                 </button>
                 <div class="progress-container">
                     <span id="mobileCurrent">0:00</span>
@@ -113,19 +114,19 @@
                 </div>
                 <div class="control-buttons">
                     <button id="mobileShuffleBtn">
-                        <span class="material-icons">shuffle</span>
+                        <span class="material-symbols-outlined">shuffle</span>
                     </button>
                     <button id="mobilePrevBtn">
-                        <span class="material-icons">skip_previous</span>
+                        <span class="material-symbols-outlined">skip_previous</span>
                     </button>
                     <button id="mobilePlayPauseBtn">
-                        <span class="material-icons">play_arrow</span>
+                        <span class="material-symbols-outlined">play_arrow</span>
                     </button>
                     <button id="mobileNextBtn">
-                        <span class="material-icons">skip_next</span>
+                        <span class="material-symbols-outlined">skip_next</span>
                     </button>
                     <button id="mobileRepeatBtn">
-                        <span class="material-icons">repeat</span>
+                        <span class="material-symbols-outlined">repeat</span>
                     </button>
                 </div>
             </div>
@@ -140,10 +141,10 @@
             </div>
             <div class="mobile-controls" onclick="event.stopPropagation()">
                 <button class="mini-play-button" onclick="togglePlay(event)">
-                    <span class="material-icons">play_arrow</span>
+                    <span class="material-symbols-outlined">play_arrow</span>
                 </button>
                 <button class="queue-toggle-button" onclick="toggleMobileQueue(event)">
-                    <span class="material-icons">queue_music</span>
+                    <span class="material-symbols-outlined">queue_music</span>
                 </button>
             </div>
         </div>
@@ -154,7 +155,7 @@
         <div class="mobile-queue-header">
             <h2>Queue</h2>
             <button class="close-queue-button" onclick="toggleMobileQueue(event)">
-                <span class="material-icons">close</span>
+                <span class="material-symbols-outlined">close</span>
             </button>
         </div>
         <div class="mobile-queue-content">

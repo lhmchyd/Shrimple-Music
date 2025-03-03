@@ -96,6 +96,7 @@ body {
     background: var(--color-surface);
     border-radius: 8px;
     padding: 8px 16px;
+    gap: 8px;
 }
 
 .search-box i {
@@ -758,12 +759,12 @@ body {
     background: var(--color-text);
 }
 
-.control-buttons #playPauseBtn .material-icons {
+.control-buttons #playPauseBtn .material-symbols-outlined {
     color: #000;
     font-size: 24px;
 }
 
-.control-buttons .material-icons {
+.control-buttons .material-symbols-outlined {
     font-size: 20px;
 }
 
@@ -776,7 +777,7 @@ body {
     min-width: 140px; /* Increased to accommodate horizontal layout */
 }
 
-.volume-control .material-icons {
+.volume-control .material-symbols-outlined {
     color: var(--color-text-secondary);
     cursor: pointer;
     font-size: 20px;
@@ -1392,14 +1393,14 @@ body {
     transform: scale(0.95);
 }
 
-.mini-play-button .material-icons {
+.mini-play-button .material-symbols-outlined {
     color: var(--color-text);
     font-size: 20px;
     transition: all 0.2s ease;
 }
 
 /* Ensure the icon transitions smoothly */
-.mini-play-button .material-icons {
+.mini-play-button .material-symbols-outlined {
     width: 20px;
     height: 20px;
     display: flex;

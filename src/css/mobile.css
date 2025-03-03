@@ -324,7 +324,7 @@
         box-sizing: border-box;
     }
 
-    .player-controls.expanded #mobilePlayPauseBtn .material-icons {
+    .player-controls.expanded #mobilePlayPauseBtn .material-symbols-outlined {
         font-size: clamp(24px, 6vw, 32px);
         width: auto;
         height: auto;
@@ -342,7 +342,7 @@
         overflow: hidden;
     }
 
-    .player-controls.expanded .control-buttons .material-icons {
+    .player-controls.expanded .control-buttons .material-symbols-outlined {
         font-size: 28px;
     }
 
@@ -383,7 +383,7 @@
         transform: scale(1.1);
     }
 
-    .close-button .material-icons {
+    .close-button .material-symbols-outlined {
         font-size: 28px;
     }
 
@@ -459,7 +459,7 @@
         height: 64px;
     }
 
-    .player-controls.expanded .control-buttons .material-icons {
+    .player-controls.expanded .control-buttons .material-symbols-outlined {
         font-size: 28px;
     }
 
@@ -534,7 +534,7 @@
         padding: 0;
     }
 
-    .control-buttons button .material-icons {
+    .control-buttons button .material-symbols-outlined {
         font-size: min(28px, 5vw);
     }
 
