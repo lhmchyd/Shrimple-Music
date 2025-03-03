@@ -755,7 +755,7 @@ async function removeFromFavorites(event, index) {
             const allFavoriteButtons = document.querySelectorAll(`button[onclick*="${removedSong.videoId}"]`);
             allFavoriteButtons.forEach(btn => {
                 btn.classList.remove('active');
-                btn.querySelector('.material-symbols-outlined').textContent = 'favorite_border';
+                btn.querySelector('.material-icons').textContent = 'favorite_border';
             });
         }
         
