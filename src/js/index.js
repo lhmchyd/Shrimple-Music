@@ -22,6 +22,9 @@ let cooldownTimer = null;
 // Add these at the top with other variable declarations
 let sessionToken = localStorage.getItem('sessionToken');
 
+// Add this variable with other declarations at the top
+let previousVolume = 100;
+
 // Generate session token if not exists
 if (!sessionToken) {
     sessionToken = Math.random().toString(36).substring(2) + Date.now().toString(36);
@@ -532,14 +535,25 @@ function playPrevious() {
     updateQueue();
 }
 
+// Replace the toggleMute function
 function toggleMute() {
+    const volumeBar = document.getElementById('volumeBar');
     const volumeIcon = document.getElementById('volumeIcon');
-    if (player.isMuted()) {
-        player.unMute();
-        volumeIcon.textContent = 'volume_up';
-    } else {
-        player.mute();
+    
+    if (volumeBar.value > 0) {
+        // Store current volume before muting
+        previousVolume = volumeBar.value;
+        // Set volume to 0
+        player.setVolume(0);
+        volumeBar.value = 0;
+        volumeBar.style.setProperty('--volume', '0%');
         volumeIcon.textContent = 'volume_off';
+    } else {
+        // Restore previous volume
+        player.setVolume(previousVolume);
+        volumeBar.value = previousVolume;
+        volumeBar.style.setProperty('--volume', `${previousVolume}%`);
+        volumeIcon.textContent = previousVolume < 50 ? 'volume_down' : 'volume_up';
     }
 }
 
