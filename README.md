@@ -1,69 +1,83 @@
-# 🎵 Shrimple Music
+# Status Page
 
-<div align="center">
-  
-[![Stars](https://img.shields.io/github/stars/lhmchyd/Shrimple-Music?style=for-the-badge)](https://github.com/lhmchyd/Shrimple-Music/stargazers)
-[![Forks](https://img.shields.io/github/forks/lhmchyd/Shrimple-Music?style=for-the-badge)](https://github.com/lhmchyd/Shrimple-Music/network/members)
-[![Issues](https://img.shields.io/github/issues/lhmchyd/Shrimple-Music?style=for-the-badge)](https://github.com/lhmchyd/Shrimple-Music/issues)
+This is a status page for monitoring service uptime and availability with a hybrid approach: detailed recent checks and daily aggregated snapshots.
 
-  <img src="https://media-hosting.imagekit.io//9ab32c3ec4034b10/Asset%201.png?Expires=1835200285&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=OZGvk4HZRbczb~XnseFl~Gc96foLAiucntw3MGBowzCBr1jvitGmL~vcf1jn9DExlqOmXzUvWu9r5Ng3Jy7GXrUnhw0zTSq8Tegz3ycvTy7cnwfKdx6lCMC~tC2XA-hDf9H9TWxpCPlT9S2T0UFqxceV92QvFM6TG4oJY1QhKeqY5jCv7b-1LYo9rrH7wIYZnDn2FDBmvZlZMIMLH7zl1Q~W07tnQPuAEUD8hfyxhzbF8vvDnn7xpFjCO8QqF3aidl6E6wTcSZZ19W7YQ1-ItCgsE3yq737~vh8BYBU5zVGnGXivOzHEiWhra~COq1UAmxv0Dqz1g7LPARD0ih0-DA__" width="50%">
+## Project Structure
 
-</div>   
-
-
-Shrimple Music is a **lightweight**, **minimalist**, and **responsive** music player built for seamless playback on **desktop and mobile** devices. It allows users to **search, queue, and play** their favorite tracks in a simple yet powerful interface.
-
-📌 **Live Demo:** [Shrimple Music](https://shrimple-music.vercel.app/)
-
-🤖 **Disclaimer:** Using both Copilot and OpenAI to make this my first project.
-
----
-
-## 📸 Screenshots
-
-| 🎵 Desktop | 📂 Mobile |
-|--------------|----------------|
-| ![Dekstop](https://media-hosting.imagekit.io//de5b37225a9c4569/screenshot_1740841075464.png?Expires=1835449077&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=EMhn7K1omfedDXE5r~J-KrwBd~V5SxLHJm8yl8Ig3XIlz-i7KFX-rdsTjrCphlpIq3dyOQqC2ivTJTmNKuFSzOaI32JBOWkDKjHAJJlxqRtgHg7hDeqoAL34y-QbI6C4wg0PBpH8XyBE60GRO04IkzGYEIDizbb6Nlj0qykxSGewotpRyKeS3M6UhERYqm1cxu7ham9CfvWCFWCxTaTQe6LOV94trNNSA8aG6lRfcFxFSGZfI5XGWUO7gewu7J9RZDQBWWRJ2PwlmZzXSIoVxdBRrJBH0jPTDDSKsJClQyMpGBNsVAl3kuPwxissMlaxVB1vHIRuG2mjPx396ihmBw__) | ![Mobile](https://media-hosting.imagekit.io//2b1c961e460341ff/shrimple-music.vercel.app_(Pixel%207).png?Expires=1835449222&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=qP2ofSU5FfCKyBESvOrhwcpPQ9nhN3Lm-f5icO9zg9DuQIBujC7PlmFhm-V23s3FdgIZuGiUhgTXx6o6qmutXXn4I4iTKkbYimfAOmTkJmv2gTy0CZGu6ZC60P8Mq~48HzmyXu0fCAtXOSum1g-Js0HLZUJw-gZ4Y3ZLA-khd9cBfCeLl5rbI~YYHNJqLGihsOGdMcRRgrVb77ELcXBw71gPzHmx2C2V2YLWZ7x9X~sbS6tOCjY4dkzXW4s6XnkQdkgZSjsszxJUGd4RoJVhaJy8Y5ND1oIBK0neAjdYiQkh8iQ6TTsJmxMDItIomQ2G1T4wiN37SpaKrPn0ifynMg__) |
-
----
-
-## 🚀 Features
-
-✅ **Cross-Platform Compatibility** – Works on desktop & mobile.   
-✅ **Local Storage** – Saving Favorite music using IndexedDB.    
-✅ **Minimalist UI** – Distraction-free and easy-to-use interface.  
-✅ **Responsive Layout** – Adapts to different screen sizes.  
-✅ **Playlist Support** – Organize your favorite songs.  
-✅ **Search Functionality** – Quickly find and play tracks.  
-✅ **Playback Controls** – Play, pause, skip, and volume controls.  
-✅ **Dark Mode** – Enjoy a modern dark UI.  
-✅ **Drag & Drop** – Drag & drop to organize the favorites music.  
-
----
-
-## 📦 Installation
-
-To set up **Shrimple Music** locally, follow these steps:
-
-### 1️⃣ Clone the Repository
-```bash
-git clone https://github.com/lhmchyd/Shrimple-Music.git
 ```
-### 2️⃣ Install Dependencies
-```bash
-npm install
+.
+├── index.html              # Main HTML file
+├── status-results.json     # Current status results
+├── status-history.json     # Detailed recent status checks (last 100 checks) - for recent status viewing
+├── status-day.json         # Daily status snapshots (last 60 days) - for long-term history and external API access
+├── README.md               # Documentation
+├── src/
+│   ├── css/
+│   │   └── style.css       # Stylesheet for the status page
+│   └── js/
+│       └── script.js       # JavaScript logic for the status page
+├── scripts/
+│   └── check-status.js     # Script to check service status and manage both detailed and daily snapshots
 ```
-### 3️⃣ Run Development
+
+## How It Works
+
+The system maintains two types of history:
+- `status-history.json`: Detailed checks (every 5 minutes) limited to last 100 entries for recent status viewing
+- `status-day.json`: Daily snapshots (one per day) containing the last check from each day, kept for 60 days for long-term history
+
+When the script runs:
+1. It performs the current status check
+2. It examines the existing `status-history.json` for any "completed" days (days with no more upcoming entries)
+3. For each completed day, it takes the chronologically last check from that day and adds it to `status-day.json`
+4. It adds the current check to `status-history.json`
+
+This provides:
+- Recent detailed history via `status-history.json` (last 100 checks)
+- Long-term historical data via `status-day.json` (last 60 days with one snapshot per day)
+- Easy external API access via `status-day.json` for daily status information
+
+## Real-time Updates
+
+The status page automatically updates every 30 seconds to check for new data. The GitHub Action runs every 5 minutes by schedule, but you can trigger it manually or via external services:
+
+### Manual Trigger
+You can manually trigger a status check using GitHub's repository dispatch API:
 ```bash
-npm run dev
+curl -X POST \
+  -H "Accept: application/vnd.github.v3+json" \
+  -H "Authorization: Bearer YOUR_GITHUB_TOKEN" \
+  https://api.github.com/repos/lhmchyd/status-honmaku/dispatches \
+  -d '{"event_type":"status-check"}'
 ```
-### 4️⃣ This will launch the server, and you can access the application by navigating to `http://localhost:3000` in your browser.
-http://localhost:3000   
 
-## Built with
-- [express](https://expressjs.com/en/starter/installing.html)
-- [cors](https://www.npmjs.com/package/cors)
-- [youtube-sr](https://www.npmjs.com/package/youtube-sr)   
+### Automated Trigger with External Service
+You can use a service like cron-job.org to trigger checks more frequently:
 
-## License
-[MIT](./LICENSE) License &copy; 2025
+**Option 1: Direct API Call**
+- URL: `https://api.github.com/repos/lhmchyd/status-honmaku/dispatches`
+- Method: `POST`
+- Headers: 
+  - `Authorization: Bearer YOUR_GITHUB_TOKEN`
+  - `Content-Type: application/json`
+- Body: `{"event_type": "status-check"}`
+
+**Option 2: Serverless Function (for token security)**
+Deploy the API function to Vercel and trigger that instead:
+1. Deploy this project to Vercel
+2. Set up an environment variable `GITHUB_TOKEN` with your GitHub token
+3. Call your deployed endpoint: `https://your-project.vercel.app/api/trigger`
+
+### Command Line Trigger
+Run the included script:
+```bash
+GITHUB_TOKEN=your_token node scripts/trigger-github-action.js
+```
+
+## Local Development
+
+To run this locally, you need a web server due to CORS restrictions when loading JSON files. You can:
+
+- Use Python's built-in server: `python -m http.server 8000`
+- Use Node's http-server: `npx http-server`
+- Use any other local web server
